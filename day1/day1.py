@@ -7,7 +7,7 @@ if __name__ == "__main__":
     calibration_sum = 0
     for line in document:
         nums = [char for char in line if char.isdigit()]
-        calibration_sum += int(nums[0] + nums[-1]
+        calibration_sum += int(nums[0] + nums[-1])
     print(f" Part 1: {calibration_sum}")
 
     calibration_sum = 0

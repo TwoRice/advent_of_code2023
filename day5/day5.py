@@ -30,8 +30,6 @@ def find_lowest_location(maps, seeds):
     found = False
 
     for num in range(max_location):
-        if found: break
-        lowest_location = num
         for i in range(-1, -len(maps), -1):
             for source_start, dest_start, length in parse_map(maps[i]):
                 if num >= source_start and num <= source_start + length:
@@ -43,7 +41,10 @@ def find_lowest_location(maps, seeds):
                 found = True
                 break
 
-    return lowest_location - 1
+        if found: break
+        lowest_location = num
+
+    return lowest_location
 
 if __name__ == "__main__":
     # Read data

@@ -43,9 +43,8 @@ if __name__ == "__main__":
     for cards, bid in hands:
         card_counts = Counter(cards)
         num_jokers = card_counts["J"]
-        if num_jokers != 5:
-            card_counts["J"] = 0
-            card_counts[card_counts.most_common(1)[0][0]] += num_jokers
+        card_counts["J"] = 0
+        card_counts[card_counts.most_common(1)[0][0]] += num_jokers
         most_common = card_counts.most_common()
         cards = cards.replace("T", "B").replace("J", "0").replace("Q", "C").replace("K", "D").replace("A", "E")
         

@@ -4,7 +4,7 @@ from functools import reduce
 def lcm(a, b):
     return abs(a*b) // math.gcd(a, b)
 
-def find_end(network, start_node, ends_with_z=False):
+def find_end(network, start_node, ends_with="ZZZ"):
     steps = 0
     found = False
     current_node = network[start_node]
@@ -12,10 +12,7 @@ def find_end(network, start_node, ends_with_z=False):
         for direction in instructions:
             steps += 1
             go = 0 if direction == "L" else 1
-            if ends_with_z and current_node[go].endswith("Z"):
-                found = True
-                break
-            if current_node[go] == "ZZZ":
+            if current_node[go].endswith(ends_with):
                 found = True
                 break
             current_node = network[current_node[go]]
@@ -35,5 +32,5 @@ if __name__ == "__main__":
     print(f"Part 1: {find_end(network, 'AAA')}")
 
     start_nodes = [node for node in network.keys() if node.endswith("A")]
-    steps = [find_end(network, node, ends_with_z=True) for node in start_nodes]
+    steps = [find_end(network, node, ends_with="Z") for node in start_nodes]
     print(f"Part 2: {reduce(lambda a, b: lcm(a, b), steps)}")

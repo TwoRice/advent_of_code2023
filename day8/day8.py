@@ -1,8 +1,4 @@
 import math
-from functools import reduce
-
-def lcm(a, b):
-    return abs(a*b) // math.gcd(a, b)
 
 def find_end(network, start_node, ends_with="ZZZ"):
     steps = 0
@@ -33,4 +29,4 @@ if __name__ == "__main__":
 
     start_nodes = [node for node in network.keys() if node.endswith("A")]
     steps = [find_end(network, node, ends_with="Z") for node in start_nodes]
-    print(f"Part 2: {reduce(lambda a, b: lcm(a, b), steps)}")
+    print(f"Part 2: {math.lcm(*steps)}")

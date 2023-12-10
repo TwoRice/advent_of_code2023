@@ -37,5 +37,22 @@ if __name__ == "__main__":
     start_loc = start_loc[0][0], start_loc[1][0]
     pipe_map[start_loc] = "7"
     
-    loop_length = find_connected_neighbours(pipe_map, *start_loc)
+    search_map = pipe_map.copy()
+    loop_length = find_connected_neighbours(search_map, *start_loc)
     print(f"Part 1 : {loop_length/2}")
+
+    loop_locs = np.where(search_map == "0")
+    loop_locs = [(y, x) for y, x in zip(*loop_locs)]
+    inside = 0
+    for y in range(len(pipe_map)):
+        for x in range(len(pipe_map[0])):
+            if (y, x) not in loop_locs:
+                search_left = x-1
+                down_pipe_counts = 0
+                while search_left >= 0:
+                    if (y, search_left) in loop_locs and pipe_map[y, search_left] in down_pipes:
+                        down_pipe_counts += 1
+                    search_left -= 1
+                if down_pipe_counts % 2 == 1:
+                    inside += 1   
+    print(f"Part 2: {inside}")     

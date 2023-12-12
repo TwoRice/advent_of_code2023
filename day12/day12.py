@@ -1,39 +1,32 @@
 import re
+import functools
 from itertools import product
 
-def brute_force(records):
-    unknown_search = re.compile(r"\?+")
-    damaged_search = re.compile(r"\#+")
-    valid_sum = 0
-    for condition_map, group_counts in records:
-        valid_combos = 0 
-        group_combos = []
-        spans = []
-        for unknown in re.finditer(unknown_search, condition_map):
-            unknown_len = len(unknown.group(0))
-            group_combos.append(["".join(combo) for combo in product(".#", repeat=unknown_len)])
-            spans.append(unknown.span())
-    
-        for combo in product(*group_combos):
-            possible_combo = condition_map
-            for group, span in zip(combo, spans):
-                possible_combo = possible_combo[:span[0]] + group + possible_combo[span[1]:]
-    
-            valid = True
-            damaged_groups = re.findall(damaged_search, possible_combo)
-            if len(damaged_groups) != len(group_counts):
-                valid = False
-            else: 
-                for group, counts in zip(damaged_groups, group_counts):
-                    if len(group) != counts:
-                        valid = False
-                        break
-                        
-            if valid:
-                valid_combos += 1
-        valid_sum += valid_combos
+@functools.cache
+def count_valid_permutations(map, group_counts, group_size):
+    if not group_counts and "#" not in map:
+        return 1
+    elif not group_counts or len(map) == 0:
+        return 0
+        
+    if map[0] == "?":
+        return count_valid_permutations("#" + map[1:], group_counts, group_size) + \
+            count_valid_permutations("." + map[1:], group_counts, group_size)
+    elif map[0] == "#":
+        return count_valid_permutations(map[1:], group_counts, group_size+1)
+    elif map[0] == ".":
+        if group_size == group_counts[0]:
+            return count_valid_permutations(map[1:], group_counts[1:], 0)
+        elif group_size > 0:
+            return 0
+        else:
+            return count_valid_permutations(map[1:], group_counts, group_size)
 
-    return valid_sum
+def sum_valid_permutations(records):
+    return sum([
+        count_valid_permutations(condition_map + ".", group_counts, 0) 
+        for condition_map, group_counts in records
+    ])
 
 if __name__ == "__main__":
     with open("day12.txt", "r") as f:
@@ -43,4 +36,6 @@ if __name__ == "__main__":
             group_counts = tuple(int(count) for count in group_counts.split(","))
             records.append((condition_map, group_counts))
 
-        print(f"Part 1: {brute_force(records)}")
+        print(f"Part 1: {sum_valid_permutations(records)}")
+        unfolded = [("?".join([condition_map]*5), group_counts*5) for condition_map, group_counts in records]
+        print(f"Part 2: {sum_valid_permutations(unfolded)}")

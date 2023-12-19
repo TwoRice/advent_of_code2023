@@ -32,7 +32,6 @@ def calc_cubic_meters(instructions):
 
     return inside_points + perimeter
     
-
 if __name__ == "__main__":
     with open("day18.txt", "r") as f:
         dig_plan = [instruction.split() for instruction in f.read().split("\n")]

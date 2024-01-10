@@ -4,7 +4,7 @@ from collections import defaultdict
 def check_neighbours(schematic, y, x):
     offsets = [-1, 0, 1]
     neighbours = [(y+dy, x+dx) for dx in offsets for dy in offsets]
-    matches = [n for n in neighbours if schematic[n].isdigit()]     
+    matches = [n for n in neighbours if schematic[n].isdigit()]   
     return matches
 
 def get_part_number(schematic, y, x):
